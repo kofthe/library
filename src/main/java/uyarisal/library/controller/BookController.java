@@ -4,6 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uyarisal.library.business.abstracts.BookService;
+import uyarisal.library.dtos.book.request.BookRequest;
+import uyarisal.library.dtos.book.response.BookListResponse;
+import uyarisal.library.dtos.book.response.BookResponse;
 import uyarisal.library.entity.Book;
 
 import java.util.List;
@@ -13,15 +16,17 @@ import java.util.Objects;
 @RequestMapping("/api/v1/books")
 public class BookController {
 
+    AuthorController authorController;
     BookService bookService;
 
-    public BookController(BookService bookService) {
+    public BookController(AuthorController authorController, BookService bookService) {
+        this.authorController = authorController;
         this.bookService = bookService;
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Book>> getAll() {
-        List<Book> bookList = bookService.getAll();
+    public ResponseEntity<List<BookListResponse>> getAll() {
+        List<BookListResponse> bookList = bookService.getAll();
         if (bookList.isEmpty()){
             return ResponseEntity.noContent().build();
         }
@@ -29,28 +34,28 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getById(@PathVariable Long id) {
-        Book book = bookService.getById(id);
-        if (Objects.nonNull(book)) {
-            return new ResponseEntity<>(book,HttpStatus.OK);
+    public ResponseEntity<BookResponse> getById(@PathVariable Long id) {
+        BookResponse bookResponse = bookService.getById(id);
+        if (Objects.nonNull(bookResponse)) {
+            return new ResponseEntity<>(bookResponse,HttpStatus.OK);
         }
         return ResponseEntity.badRequest().build();
     }
 
     @PostMapping("/addbook")
-    public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        Book book1 = bookService.add(book);
-        if (Objects.nonNull(book1)) {
-            return new ResponseEntity<>(book1, HttpStatus.OK);
+    public ResponseEntity<BookResponse> addBook(@RequestBody BookRequest bookRequest) {
+        BookResponse bookResponse = bookService.add(bookRequest);
+        if (Objects.nonNull(bookResponse)) {
+            return new ResponseEntity<>(bookResponse, HttpStatus.OK);
         }
         return ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
-        Book book1 = bookService.update(book, id);
-        if (Objects.nonNull(book1)) {
-            return new ResponseEntity<>(book1, HttpStatus.OK);
+    public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @RequestBody Book book) {
+        BookResponse bookResponse = bookService.update(book, id);
+        if (Objects.nonNull(bookResponse)) {
+            return new ResponseEntity<>(bookResponse, HttpStatus.OK);
         }
         return ResponseEntity.badRequest().build();
     }

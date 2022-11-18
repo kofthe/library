@@ -1,20 +1,24 @@
 package uyarisal.library.business.abstracts;
 
+import uyarisal.library.dtos.book.request.BookRequest;
+import uyarisal.library.dtos.book.response.BookListResponse;
+import uyarisal.library.dtos.book.response.BookResponse;
 import uyarisal.library.entity.Book;
 
 import java.util.List;
 
 public interface BookService {
 
-    List<Book> getAll();
+    List<BookListResponse> getAll();
 
-    Book getById(Long id);
+    BookResponse getById(Long id);
 
-    Book add(Book book);
+    BookResponse add(BookRequest bookRequest);
 
-    Book update(Book book, Long id);
+    BookResponse update(Book book, Long id);
 
     void delete(Long id);
+    
 
 
 }
